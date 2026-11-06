@@ -6,4 +6,5 @@ sequenceDiagram
   note right of server: store note in the server
   server->>browser:{"message": "note created"}
   deactivate server
+  note left of browser: diplay response message in console or trigger alert for offensive word
 ```
