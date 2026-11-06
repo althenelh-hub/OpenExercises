@@ -5,5 +5,5 @@ sequenceDiagram
   activate server
   note right of server: store note in the server
   server->>browser:{"message":"note created"}
-  deactivate: server
+  deactivate server
 ```
