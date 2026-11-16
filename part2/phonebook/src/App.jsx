@@ -37,11 +37,12 @@ const Phones = (props) => {
 }
 
 function App() {
+
     const [phonenumbers, setPhoneNumbers] = useState([])
     const [phoneName, setPhoneName] = useState('')
     const [filterTerm, setFilter] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
-    const [notification, setNotification] = useState('Halo')
+    const [notification, setNotification] = useState(null)
     const [notificationType, setNotificationType] = useState('Accept')
     const handleFilterTerm = (event) => {
         setFilter(event.target.value)
@@ -97,7 +98,10 @@ function App() {
         const phoneObject = phonenumbers.find(phone => phone.id === id)
         if(window.confirm(`Are you sure you want to delete ${phoneObject.name}`)) {
             phoneService.deletePhone(id)
-                .then(data => setPhoneNumbers(phonenumbers.filter(number => number.id !== data.id)))
+                .then(data => {
+                    setPhoneNumbers(phonenumbers.filter(number => number.id !== id))
+                    console.log('passed')
+                })
                 .catch(error => alert(`You cannot delete ${phoneObject.name} because of ${error}`))
         }
     }
