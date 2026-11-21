@@ -7,7 +7,7 @@ require('dotenv').config()
 const Phone = require('./modules/phone.js')
 //-----------------------------------------------------------------------------------------------------------------
 //tokens for morgan
-morgan.token('body', (request, response) => {
+morgan.token('body', (request) => {
   return JSON.stringify(request.body)
 })
 //-------------------------------------------------------------------------------------------------------------------
@@ -51,25 +51,26 @@ app.post('/api/persons', (request, response, next) => {
   const name = body.name
   const number = body.number
   if(!body) {
-    return response.status(400).json({"error": "no data"})
+    return response.status(400).json({ 'error': 'no data' })
   }
   if(!number) {
-    return response.status(400).json({"error": "request misses number"})
+    return response.status(400).json({ 'error': 'request misses number' })
   }
   if(!name) {
-    return response.status(400).json({"error": "request misses name"})
+    return response.status(400).json({ 'error': 'request misses name' })
   }
   const phone = new Phone({
-    "name": name,
-    "number": number,
+    'name': name,
+    'number': number,
   })
-  phone.save().then(savedPhone => {
-    response.json(savedPhone)
-  })
-  .catch(error => next(error))
+  phone.save()
+    .then(savedPhone => {
+      response.json(savedPhone)
+    })
+    .catch(error => next(error))
 })
 app.put('/api/persons/:id', (request, response, next) => {
-  const { name, number } = request.body
+  const { number } = request.body
   Phone.findById(request.params.id)
     .then(phone => {
       phone.number = number
@@ -81,7 +82,7 @@ app.put('/api/persons/:id', (request, response, next) => {
 })
 app.delete('/api/persons/:id', (request, response, next) => {
   Phone.findByIdAndDelete(request.params.id)
-    .then(result => {
+    .then(() => {
       response.status(204).end()
     })
     .catch(error => next(error))
@@ -98,7 +99,7 @@ const errorHandler = (error, request, response, next) => {
       return response.status(400).json({ 'error': 'shortName' })
     }
     else if (!/^\d{2,3}-\d{5,}/.test(request.body.number)) {
-      return response.status(400).json({'error': 'wrongNumber'})
+      return response.status(400).json({ 'error': 'wrongNumber' })
     }
   }
   console.log(error)
