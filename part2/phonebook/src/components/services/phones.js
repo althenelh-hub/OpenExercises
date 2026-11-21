@@ -1,17 +1,23 @@
 import axios from 'axios'
-const baseUrl = ''
+const baseUrl = '/api'
 
 const getPhones = () => {
-    return axios.get(`${baseUrl}/phones`).then(response => response.data)
+    console.log(`${baseUrl}/phones`)
+    return axios.get(`${baseUrl}/phones`).then(response => {
+        console.log(response.data)
+        return response.data
+    })
 }
 const create = (phone) => {
-    return axios.post(`${baseUrl}/api/persons`, phone).then(response => response.data)
+    return axios.post(`${baseUrl}/persons`, phone).then(response => {
+        return response.data
+    })
 }
 const deletePhone = (id) => {
-    return axios.delete(`${baseUrl}/api/persons/${id}`).then(response => response.data)
+    return axios.delete(`${baseUrl}/persons/${id}`).then(response => response.data)
 }
 const updateNumber = (id, phoneObject) => {
-    return axios.put(`${baseUrl}/${id}`, phoneObject).then(response => response.data)
+    return axios.put(`${baseUrl}/persons/${id}`, phoneObject).then(response => response.data)
 }
 export default {
     getPhones,

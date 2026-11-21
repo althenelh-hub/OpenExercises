@@ -37,7 +37,8 @@ const Phones = (props) => {
 }
 
 function App() {
-
+    //----------------------------------------------------------------------------------------------------------------------
+    //hooks
     const [phonenumbers, setPhoneNumbers] = useState([])
     const [phoneName, setPhoneName] = useState('')
     const [filterTerm, setFilter] = useState('')
@@ -48,11 +49,25 @@ function App() {
         setFilter(event.target.value)
     }
     useEffect(() => {
-        phoneService.getPhones().then(response => setPhoneNumbers(response))
+        phoneService.getPhones().then(response => {
+            console.log(response)
+            setPhoneNumbers(response)
+        })
     }, [])
+    //--------------------------------------------------------------------------------------------------------------------------
+    //empty form fields
+    const emptyFields = () => {
+        setPhoneName('')
+        setPhoneNumber('')
+    }
+    console.log('working')
+    //------------------------------------------------------------------------------------------------------------------------------
+    //add phone to array
     const addPhone = (event) => {
         event.preventDefault()
+        console.log(phonenumbers)
         const phoneObject = phonenumbers.find(number => number.name === phoneName)
+        //phone already exists
         if (phoneObject) {
             if(confirm(`${phoneName} is already added to the phoneboook. Do you wish to update their phone number`)) {
                 const newObject = { ...phoneObject, number: phoneNumber}
@@ -62,17 +77,14 @@ function App() {
                         setNotificationType('Accept')
                         setTimeout(() => setNotification(null), 5000)
                         setPhoneNumbers(phonenumbers.map(number => number.name === phoneName ? response : number))
-                        setPhoneName('')
-                        setPhoneNumber('')
+                        emptyFields()
                     })
                     .catch(error => {
                         setNotification(`${phoneName} was removed from the server`)
                         setNotificationType('Error')
                         setTimeout(() => setNotification(null), 5000)
                         setPhoneNumbers(phonenumbers.filter(number => number.name !== phoneName))
-                        setPhoneName('')
-                        setPhoneNumber('')
-                        
+                        emptyFields()
                     })
             }
         }
@@ -86,6 +98,18 @@ function App() {
                 setPhoneNumber('')
                 setPhoneName('')
             })
+                .catch(error => {
+                    if (error.response.data.error === 'shortName') {
+                        console.log('passed')
+                        setNotification(`name must be at least 3 characters long`)
+                        setNotificationType('Error')
+                    }
+                    else if (error.response.data.error === 'wrongNumber') {
+                        console.log('wrongNumber')
+                        setNotification(`phone number must follow xx(x)-xxxx(x)... format`)
+                        setNotificationType('Error')
+                    }
+                })
         }
     }
     const handleNameChange = (event) => {
