@@ -103,11 +103,13 @@ function App() {
                         console.log('passed')
                         setNotification(`name must be at least 3 characters long`)
                         setNotificationType('Error')
+                        setTimeout(() => setNotification(null), 5000)
                     }
                     else if (error.response.data.error === 'wrongNumber') {
                         console.log('wrongNumber')
                         setNotification(`phone number must follow xx(x)-xxxx(x)... format`)
                         setNotificationType('Error')
+                        setTimeout(() => setNotification(null), 5000)
                     }
                 })
         }
